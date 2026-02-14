@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .scheduler-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 1px 12px rgba(0,0,0,0.1);
+        }
+        .scheduler-table th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            border: 1px solid #34495e;
+            text-align: left;
+        }
+        .scheduler-table td {
+            padding: 12px;
+            border: 1px solid #ecf0f1;
+            vertical-align: top;
+            line-height: 1.6;
+        }
+        .scheduler-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .scheduler-table tr:hover {
+            background-color: #f1f4f7;
+        }
+        .algorithm-name {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <table class="scheduler-table">
+        <thead>
+            <tr>
+                <th>算法名称</th>
+                <th>算法思想</th>
+                <th>算法规则</th>
+                <th>适用调度类型</th>
+                <th>可抢占否</th>
+                <th>优点</th>
+                <th>缺点</th>
+                <th>是否会饥饿</th>
+                <th>其他特性</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 先来先服务 FCFS -->
+            <tr>
+                <td class="algorithm-name">先来先服务 FCFS</td>
+                <td>基于公平原则，按到达顺序排队</td>
+                <td>等待时间最长的作业优先调度</td>
+                <td>进程调度、作业调度</td>
+                <td>非抢占式</td>
+                <td>
+                    ✓ 公平易实现<br>
+                    ✓ 利于长作业
+                </td>
+                <td>
+                    ✗ 短作业等待时间长<br>
+                    ✗ 不利于I/O型作业
+                </td>
+                <td>不会</td>
+                <td>适合CPU密集型</td>
+            </tr>
+
+            <!-- 短作业优先 SJF -->
+            <tr>
+                <td class="algorithm-name">短作业优先 SJF</td>
+                <td>服务时间最短的作业优先</td>
+                <td>选择要求服务时间最短的作业</td>
+                <td>进程调度、作业调度</td>
+                <td>非抢占式<br>(SRTN为抢占式)</td>
+                <td>平均等待时间最短</td>
+                <td>
+                    ✗ 对长作业不公<br>
+                    ✗ 需预知运行时间
+                </td>
+                <td>会</td>
+                <td>-</td>
+            </tr>
+
+            <!-- 高响应比优先 HRRN -->
+            <tr>
+                <td class="algorithm-name">高响应比优先 HRRN</td>
+                <td>综合等待时间和运行时间</td>
+                <td>优先权=(等待时间+要求服务时间)/要求服务时间</td>
+                <td>进程调度、作业调度</td>
+                <td>非抢占式</td>
+                <td>
+                    ✓ 平衡FCFS和SJF<br>
+                    ✓ 无饥饿
+                </td>
+                <td>需动态计算优先权</td>
+                <td>不会</td>
+                <td>-</td>
+            </tr>
+
+            <!-- 优先级调度 -->
+            <tr>
+                <td class="algorithm-name">优先级调度</td>
+                <td>根据任务紧急程度调度</td>
+                <td>选择优先级最高的作业</td>
+                <td>进程/作业/I/O调度</td>
+                <td>可抢占/非抢占</td>
+                <td>
+                    可以灵活地调整各种进程被服务的机会<br>
+                    适合实时系统
+                </td>
+                <td>低优先级可能饥饿</td>
+                <td>会</td>
+                <td>
+                    优先级规则：<br>
+                    • 系统>用户<br>
+                    • 交互型>非交互<br>
+                    • I/O型>计算型
+                </td>
+            </tr>
+
+            <!-- 时间片轮转 RR -->
+            <tr>
+                <td class="algorithm-name">时间片轮转RR</td>
+                <td>公平轮转为每个进程服务</td>
+                <td>按FCFS排队，每个进程执行固定时间片</td>
+                <td>进程调度</td>
+                <td>抢占式</td>
+                <td>
+                    让各个进程得到及时的响应<br>
+                    ✓ 公平响应快<br>
+                    ✓ 适合分时系统
+                </td>
+                <td>
+                    ✗ 高频切换开销大<br>
+                    ✗ 时间片设置敏感
+                </td>
+                <td>不会</td>
+                <td>
+                    时间片过小→退化为SJF<br>
+                    时间片过大→退化为FCFS
+                </td>
+            </tr>
+
+            <!-- 多级反馈队列 -->
+            <tr>
+                <td class="algorithm-name">多级反馈队列</td>
+                <td>综合多种算法优势</td>
+                <td>
+                    1. 多级队列（优先级↓，时间片↑）<br>
+                    2. 新进程进入第一级队列<br>
+                    3. 高级队列为空才调度低级
+                </td>
+                <td>进程调度</td>
+                <td>抢占式</td>
+                <td>
+                    ✓ 平衡各类进程<br>
+                    ✓ 短作业快速完成
+                </td>
+                <td>配置复杂</td>
+                <td>概率极低</td>
+                <td>实际系统广泛使用</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件存储空间管理方法分析</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .methods-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 25px;
+            gap: 25px;
+        }
+        
+        .method-card {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .method-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-header {
+            padding: 20px;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .method-1 .card-header { background: var(--secondary); }
+        .method-2 .card-header { background: #27ae60; }
+        .method-3 .card-header { background: #f39c12; }
+        .method-4 .card-header { background: #9b59b6; }
+        
+        .card-content {
+            padding: 25px;
+        }
+        
+        .card-content h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .property {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .property:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .comparison-section {
+            padding: 40px;
+            background: var(--light);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+        
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .rating {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .high { background: #27ae60; }
+        .medium { background: #f39c12; }
+        .low { background: #e74c3c; }
+        
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .methods-container {
+                flex-direction: column;
+            }
+            
+            .method-card {
+                min-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>文件存储空间管理方法分析</h1>
+            <p class="subtitle">深入解析四种主要存储管理方法：空闲表法、空闲链表法、位示图法与成组链接法</p>
+        </header>
+        
+        <div class="methods-container">
+            <div class="method-card method-1">
+                <div class="card-header">空闲表法</div>
+                <div class="card-content">
+                    <h3>数据结构</h3>
+                    <div class="property">系统维护一张空闲表，记录所有空闲区域</div>
+                    <div class="property">每个表项包含：起始盘块号、空闲盘块数</div>
+                    
+                    <h3>分配过程</h3>
+                    <div class="property">采用动态分区分配算法（首次适应、最佳适应等）</div>
+                    <div class="property">找到合适空闲区后，修改空闲表项</div>
+                    
+                    <h3>回收过程</h3>
+                    <div class="property">回收空间时考虑与前/后空闲区合并</div>
+                    <div class="property">更新空闲表项</div>
+                    
+                    <h3>特点</h3>
+                    <div class="property">优点：简单直观，适合连续分配方式</div>
+                    <div class="property">缺点：存在外部碎片问题，频繁分配回收效率低</div>
+                    <div class="property">适用场景：小型文件系统，连续分配方式</div>
+                </div>
+            </div>
+            
+            <div class="method-card method-2">
+                <div class="card-header">空闲链表法</div>
+                <div class="card-content">
+                    <h3>数据结构</h3>
+                    <div class="property">空闲盘块链：所有空闲盘块组成链表</div>
+                    <div class="property">空闲盘区链：每个空闲盘区作为链表节点</div>
+                    
+                    <h3>分配过程</h3>
+                    <div class="property">空闲盘块链：从链首取出所需盘块</div>
+                    <div class="property">空闲盘区链：使用分区分配算法找到合适盘区</div>
+                    
+                    <h3>回收过程</h3>
+                    <div class="property">空闲盘块链：回收块插入链表尾部</div>
+                    <div class="property">空闲盘区链：回收时考虑与相邻空闲区合并</div>
+                    
+                    <h3>特点</h3>
+                    <div class="property">优点：简单，无外部碎片（盘块链）</div>
+                    <div class="property">缺点：分配效率低（需遍历链表）</div>
+                    <div class="property">适用场景：小型文件系统，离散分配方式</div>
+                </div>
+            </div>
+            
+            <div class="method-card method-3">
+                <div class="card-header">位示图法</div>
+                <div class="card-content">
+                    <h3>数据结构</h3>
+                    <div class="property">二进制位图表示磁盘块使用状态</div>
+                    <div class="property">0表示空闲，1表示已分配</div>
+                    
+                    <h3>分配过程</h3>
+                    <div class="property">顺序扫描位示图，找到连续为0的位</div>
+                    <div class="property">计算对应盘块号：盘块号 = i*n + j（i行号，j列号）</div>
+                    
+                    <h3>回收过程</h3>
+                    <div class="property">根据盘块号计算位图位置</div>
+                    <div class="property">将对应位由1改为0</div>
+                    
+                    <h3>特点</h3>
+                    <div class="property">优点：空间占用小，可常驻内存，分配速度快</div>
+                    <div class="property">缺点：需要扫描位图（可使用位图索引优化）</div>
+                    <div class="property">适用场景：大多数现代文件系统（FAT、NTFS等）</div>
+                </div>
+            </div>
+            
+            <div class="method-card method-4">
+                <div class="card-header">成组链接法</div>
+                <div class="card-content">
+                    <h3>数据结构</h3>
+                    <div class="property">分组管理空闲块，每组包含若干空闲块</div>
+                    <div class="property">每组第一个块记录下一组空闲块信息</div>
+                    
+                    <h3>分配过程</h3>
+                    <div class="property">从当前组分配，组内空闲块不足时调入下一组</div>
+                    <div class="property">只需修改超级块中的空闲块信息</div>
+                    
+                    <h3>回收过程</h3>
+                    <div class="property">回收块加入当前组</div>
+                    <div class="property">当前组满后，将整个组作为新组写入回收块</div>
+                    
+                    <h3>特点</h3>
+                    <div class="property">优点：高效（多数操作在内存完成），适合大型文件系统</div>
+                    <div class="property">缺点：实现复杂，需要额外空间存储分组信息</div>
+                    <div class="property">适用场景：UNIX/Linux文件系统（如ext系列）</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <h2 class="section-title">管理方法对比分析</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>特性</th>
+                        <th>空闲表法</th>
+                        <th>空闲链表法</th>
+                        <th>位示图法</th>
+                        <th>成组链接法</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>空间开销</td>
+                        <td><span class="rating high">小</span></td>
+                        <td><span class="rating medium">中</span></td>
+                        <td><span class="rating high">很小</span></td>
+                        <td><span class="rating medium">中</span></td>
+                    </tr>
+                    <tr>
+                        <td>分配效率</td>
+                        <td><span class="rating medium">中</span></td>
+                        <td><span class="rating low">低</span></td>
+                        <td><span class="rating high">高</span></td>
+                        <td><span class="rating high">很高</span></td>
+                    </tr>
+                    <tr>
+                        <td>回收效率</td>
+                        <td><span class="rating medium">中</span></td>
+                        <td><span class="rating medium">中</span></td>
+                        <td><span class="rating high">高</span></td>
+                        <td><span class="rating high">很高</span></td>
+                    </tr>
+                    <tr>
+                        <td>外部碎片</td>
+                        <td><span class="rating low">严重</span></td>
+                        <td><span class="rating medium">无/少</span></td>
+                        <td><span class="rating medium">无</span></td>
+                        <td><span class="rating medium">无</span></td>
+                    </tr>
+                    <tr>
+                        <td>实现复杂度</td>
+                        <td><span class="rating high">简单</span></td>
+                        <td><span class="rating high">简单</span></td>
+                        <td><span class="rating medium">中等</span></td>
+                        <td><span class="rating low">复杂</span></td>
+                    </tr>
+                    <tr>
+                        <td>适用规模</td>
+                        <td>小型系统</td>
+                        <td>小型系统</td>
+                        <td>大/中型系统</td>
+                        <td>大型系统</td>
+                    </tr>
+                    <tr>
+                        <td>磁盘I/O次数</td>
+                        <td>中</td>
+                        <td>高</td>
+                        <td>低</td>
+                        <td>很低</td>
+                    </tr>
+                    <tr>
+                        <td>典型应用</td>
+                        <td>早期系统</td>
+                        <td>简单文件系统</td>
+                        <td>FAT, NTFS</td>
+                        <td>UNIX ext系列</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <footer>
+            <p>文件系统存储空间管理方法总结 | 计算机操作系统核心概念 | 适用于408考研及系统开发参考</p>
+        </footer>
+    </div>
+</body>
+</html>

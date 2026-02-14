@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>编译程序 vs 解释程序</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .compiler {
+            background-color: #e6f7ff;
+        }
+        .interpreter {
+            background-color: #fff7e6;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">编译程序 vs 解释程序</div>
+    <div class="subtitle">核心知识点对比总结</div>
+    
+    <table>
+        <tr>
+            <th>特性</th>
+            <th>编译程序 (Compiler)</th>
+            <th>解释程序 (Interpreter)</th>
+        </tr>
+        <tr>
+            <td><strong>工作原理</strong></td>
+            <td class="compiler">一次性将整个源程序转换为目标代码（机器码），然后执行目标代码</td>
+            <td class="interpreter">逐行解释执行源程序，不生成独立目标代码（可能生成中间代码，但不持久保存）</td>
+        </tr>
+        <tr>
+            <td><strong>目标代码</strong></td>
+            <td class="compiler">生成目标代码（如.exe或.o文件）</td>
+            <td class="interpreter">不生成目标代码；直接操作源程序或中间表示</td>
+        </tr>
+        <tr>
+            <td><strong>执行效率</strong></td>
+            <td class="compiler"><span style="color:green">高</span>：目标代码是优化后的机器码，执行速度快，适合CPU密集型任务</td>
+            <td class="interpreter"><span style="color:red">低</span>：每次执行都需解释，增加运行时开销（词法/语法分析）</td>
+        </tr>
+        <tr>
+            <td><strong>可移植性</strong></td>
+            <td class="compiler"><span style="color:red">差</span>：目标代码依赖特定硬件/OS（如Windows程序不能在Linux直接运行）</td>
+            <td class="interpreter"><span style="color:green">好</span>：源程序平台无关；有解释器即可跨平台运行（如Python）</td>
+        </tr>
+        <tr>
+            <td><strong>适用场景</strong></td>
+            <td class="compiler">
+                • 执行时间长、运行频率高的程序<br>
+                • 如：操作系统、游戏引擎、数据库系统<br>
+                • 优点：一次编译，多次高效执行
+            </td>
+            <td class="interpreter">
+                • 执行时间短、运行频率低的程序<br>
+                • 如：脚本、快速原型、网页脚本<br>
+                • 优点：无需编译，快速启动，易于调试
+            </td>
+        </tr>
+        <tr>
+            <td><strong>开发体验</strong></td>
+            <td class="compiler">
+                • 编译过程耗时（尤其大型项目）<br>
+                • 调试较难（错误在编译时报告）<br>
+                • 执行阶段高效
+            </td>
+            <td class="interpreter">
+                • 开发快速（修改后直接运行）<br>
+                • 调试方便（运行时逐行报错）<br>
+                • 执行阶段效率低
+            </td>
+        </tr>
+        <tr>
+            <td><strong>典型语言</strong></td>
+            <td class="compiler">C、C++、Rust、Go</td>
+            <td class="interpreter">Python、JavaScript、Ruby、PHP</td>
+        </tr>
+        <tr>
+            <td><strong>网络协议类比</strong></td>
+            <td class="compiler">类似TCP：可靠高效，但建立连接（编译）开销大</td>
+            <td class="interpreter">类似UDP：轻量快速，但不可靠（效率低）</td>
+        </tr>
+    </table>
+    
+    <div style="margin-top:30px; padding:15px; background:#f0f8ff; border-left:4px solid #1e90ff;">
+        <strong>核心结论：</strong> 编译程序牺牲可移植性换取高效率，解释程序牺牲效率换取可移植性。
+        现代语言常结合两者（如Java编译为字节码+JVM解释执行）以平衡效率和可移植性。
+    </div>
+</body>
+</html>

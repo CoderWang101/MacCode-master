@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>存储管理核心名词关系图</title>
+    <style>
+        .container { 
+            margin: 30px; 
+            font-family: Arial, sans-serif;
+        }
+        .box {
+            border: 2px solid;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            min-width: 150px;
+            text-align: center;
+        }
+        .logical { 
+            border-color: #4CAF50;  /* 绿色 */
+            background: #e8f5e9;
+        }
+        .physical { 
+            border-color: #2196F3;  /* 蓝色 */
+            background: #e3f2fd;
+        }
+        .table { 
+            border-color: #FF9800;  /* 橙色 */
+            background: #fff3e0;
+        }
+        .arrow {
+            font-size: 24px;
+            color: #666;
+            margin: 0 10px;
+        }
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .annotation {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 分页管理模块 -->
+        <div class="flex">
+            <!-- 逻辑地址 -->
+            <div class="box logical">
+                <h3>逻辑地址</h3>
+                <p><strong>页号</strong> + 页内偏移</p>
+                <div class="annotation">（页面：Page）</div>
+            </div>
+            <span class="arrow">→</span>
+            <!-- 页表 -->
+            <div class="box table">
+                <h3>页表</h3>
+                <p>页号 → <strong>页框号</strong></p>
+                <div class="annotation">（页表项：PTE）</div>
+            </div>
+            <span class="arrow">→</span>
+            <!-- 物理地址 -->
+            <div class="box physical">
+                <h3>物理地址</h3>
+                <p><strong>页框</strong>号 + 页内偏移</p>
+                <div class="annotation">（页框：Frame）</div>
+            </div>
+        </div>
+
+        <!-- 分段管理模块 -->
+        <div class="flex">
+            <div class="box logical">
+                <h3>逻辑地址</h3>
+                <p><strong>段号</strong> + 段内偏移</p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="box table">
+                <h3>段表</h3>
+                <p>段号 → <strong>段基址</strong></p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="box physical">
+                <h3>物理地址</h3>
+                <p>段基址 + 段内偏移</p>
+            </div>
+        </div>
+
+        <!-- 段页式管理模块 -->
+        <div class="flex">
+            <div class="box logical">
+                <h3>逻辑地址</h3>
+                <p><strong>段号</strong> + 页号 + 页内偏移</p>
+                <div class="annotation">（段内分页）</div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="box table">
+                <h3>段表 → 页表</h3>
+                <p>段号 → 页表基址<br>页号 → <strong>页框号</strong></p>
+            </div>
+            <span class="arrow">→</span>
+            <div class="box physical">
+                <h3>物理地址</h3>
+                <p>页框号 + 页内偏移</p>
+            </div>
+        </div>
+
+        <!-- 关键名词注释 -->
+        <div style="margin-top: 30px; padding: 15px; border: 1px solid #ddd;">
+            <h3>核心名词定义</h3>
+            <ul>
+                <li><strong>页面（Page）</strong>：逻辑地址空间的划分单位（如4KB）</li>
+                <li><strong>页表项（PTE）</strong>：页表中的条目，包含页框号和控制位
+                    <ul>
+                        <li>页表项数=逻辑地址空间大小/页面大小</li>
+                    </ul>
+                </li>
+                <li><strong>页框（Frame）</strong>：物理内存的划分单位，与页面一一对应</li>
+                <li><strong>页表（Page Table）</strong>：存储页面到页框的映射关系</li>
+                <li><strong>段号（Segment Number）</strong>：逻辑地址中标识段的编号</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

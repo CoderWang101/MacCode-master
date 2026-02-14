@@ -1,0 +1,2 @@
+	PC→Bus, Pcout 有效，PC 内容送总线
+	Bus→MAR   MARin 有效，总线内容送 MAR

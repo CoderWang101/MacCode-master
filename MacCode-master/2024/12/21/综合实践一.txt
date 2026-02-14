@@ -1,0 +1,184 @@
+### 1.最大公约数和最小公倍数
+'''
+设计递归算法，计算两个非负整数的最大公约数和最小公倍数。
+'''
+#最大公约数
+def gcd(a,b):
+    if b == 0:
+        return a
+    else:
+        return gcd(b, a % b)
+    
+#最小公倍数
+def lcm(a,b):
+    return a * b // gcd(a, b)
+    
+a=gcd(12, 18)
+print(a)
+
+b=lcm(32, 24)
+print(b)
+
+### 2.多项式值和
+'''
+试设计算法，对于给定的a_0,a_1,…,a_n和x值，
+计算a_n x^n+a_(n-1) x^(n-1)+⋯+a_1 x+a_0，使算法的时间复杂性为O(n)。
+'''
+def cal_multi_items(n, A, x):
+    """
+    n (int): 多项式的项数，即系数列表A的长度。
+    A (list): 多项式的系数列表，A[0]是常数项，A[n-1]是最高次项的系数。
+    x (float): 自变量x的值。
+    返回:
+    temp (float): 多项式在x处的值。
+    """
+    # 初始化temp为最高次项的系数
+    temp = A[n-1]
+    
+    # 从最高次项开始，逐项计算多项式的值
+    for i in range(n-1, 0, -1):
+        temp = temp * x + A[i-1]# 每次迭代，将当前的temp乘以x，再加上下一项的系数
+    return temp
+
+cal = cal_multi_items(4, [1, 2, 3, 4], 1)
+print(cal)  # 输出结果
+
+### 3.归并排序
+'''
+利用归并排序，对无序序列进行排序[2,6,10,3,8,4]
+'''
+def merge_sort(Alist):
+    if len(Alist) <= 1:
+        return Alist
+    #递归边界条件
+    mid = len(Alist) // 2
+    left = merge_sort(Alist[:mid])
+    right = merge_sort(Alist[mid:])
+
+    #归并操作:把连个有序子序列合并为一个大有序序列
+    result = []
+    i=j=0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    #处理剩余元素,追加到result后
+    if i==len(left):
+        result.extend(right[j:])
+    else:
+        result.extend(left[i:])
+
+    return result        
+
+
+result = merge_sort([2,6,10,3,8,4])
+print(result)  # 输出结果
+
+### 4.顾客等待时间平均值最小的等待服务时间总和
+'''
+设有n位顾客同时等待同一项服务，顾客i需要的服务时间为t_i，
+应该如何安排这n位顾客的服务次序才能使平均等待时间最小。
+平均等待时间是n位顾客等待服务时间的总和除以n。
+现在，有6位顾客{x_1,x_2,x_3,x_4,x_5,x_6 }同时等待同一项服务，
+每位顾客需要的服务时间为{30,50,100,20,120,70}，
+求出使顾客等待时间平均值最小的等待服务时间总和。
+'''
+def waiting_service(w):
+    """
+    参数:w (list): 每个客户的等待时间列表。
+    """
+    w_sorted = sorted(w)# 对等待时间进行排序（从小到大）
+    n = len(w)# 获取客户数量
+    sum_time = 0
+    
+    for i in range(n): # 计算总等待时间
+        sum_time += w_sorted[i] * (n - i - 1) # 每个客户的等待时间会被后面 (n-i-1) 个客户等待
+
+    return sum_time# 返回总等待时间
+
+w = [30, 50, 100, 20, 120, 70]
+result = waiting_service(w)
+print(result)  # 输出结果
+
+### 5.转载货物
+'''
+有一艘用来转载货物的货轮，所有待装载物品都装在n个大小一致的集装箱内，
+集装箱的质量各不相同。设第i个集装箱的质量为w_i。货轮的最大承载为c，
+目标是在货轮上装入最多的物品。
+现在，有5个物品（编号为1,2,3,4,5）的质量分别为8,4,2,5,7，
+请求出能够放入货轮的物品编号。
+'''
+class Thing:
+    def __init__(self,No,Wi):
+        self.No = No
+        self.Wi = Wi
+
+items1=Thing(1,8)
+items2=Thing(2,4)
+items3=Thing(3,2)
+items4=Thing(4,5)
+items5=Thing(5,7)
+
+items=[items1,items2,items3,items4,items5]
+
+for i in range(len(items)):
+    for j in range(len(items)-1-i):
+        if items[j].Wi > items[j+1].Wi:
+            items[j],items[j+1]=items[j+1],items[j]
+            
+sum_w=0
+total_w=12
+print("以下是装载的物品编号：")
+
+for i in range(len(items)):
+    if sum_w+items[i].Wi<=total_w:
+        print(items[i].No)
+        sum_w+=items[i].Wi
+        
+### 6.着色
+'''
+如下图所示，有个4顶点图，现在给了3种颜色，
+如何给下述4顶点图进行着色，使之有连边关系的顶点颜色不同？
+'''
+def count_graph_coloring(graph,m):
+    n=len(graph)
+    colors=[-1]*n
+    
+    count=0#记录着色数量
+    
+    def is_valid(colors,vertex,color):
+        for i in range(n):
+            if graph[vertex][i] and colors[i]==color:
+                return False
+        return True
+    
+    def backtrack(colors,vertex):
+        nonlocal count #声明count为非局部变量
+        if vertex==n:
+            count+=1
+            print(colors)
+
+            return
+        for color in range(m):
+            if is_valid(colors,vertex,color):
+                colors[vertex]=color
+                backtrack(colors,vertex+1)
+                colors[vertex]-=1
+    backtrack(colors,0)
+    return count
+
+graph=[
+    [0,1,0,1],
+    [1,0,1,0],
+    [0,1,0,1],
+    [1,0,1,0]
+]
+m=3
+
+print("着色方案数量：")
+color_count=count_graph_coloring(graph,m)
+
+print(f"着色可行解的个数为:{color_count}")  # 输出结果

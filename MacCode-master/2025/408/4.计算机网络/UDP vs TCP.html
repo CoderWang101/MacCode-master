@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDP与TCP协议对比 | 考研408计算机网络</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .exam-tips {
+            background-color: #fff9db;
+            border-left: 4px solid #ffd43b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .protocol-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .protocol-table th {
+            background: linear-gradient(to right, #1a2980, #26d0ce);
+            color: white;
+            padding: 16px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .protocol-table td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #eaeef5;
+        }
+        
+        .protocol-table tr:nth-child(even) {
+            background-color: #f8fafd;
+        }
+        
+        .protocol-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .dimension {
+            font-weight: 600;
+            background-color: #eef5ff;
+            font-size: 17px;
+        }
+        
+        .udp {
+            color: #d9534f;
+            font-weight: 500;
+        }
+        
+        .tcp {
+            color: #5bc0de;
+            font-weight: 500;
+        }
+        
+        .feature-list {
+            padding-left: 20px;
+        }
+        
+        .feature-list li {
+            margin-bottom: 8px;
+        }
+        
+        .point {
+            display: block;
+            margin-top: 5px;
+            font-size: 14.5px;
+            color: #555;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        .key-points {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-top: 30px;
+        }
+        
+        .key-points h2 {
+            color: #1a2980;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeef5;
+        }
+        
+        .point-card {
+            background: #f0f7ff;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #5bc0de;
+        }
+        
+        .point-card h3 {
+            color: #1a2980;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .protocol-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>UDP与TCP协议对比</h1>
+        <div class="subtitle">考研408计算机网络核心考点解析</div>
+    </div>
+    
+    <div class="exam-tips">
+        <strong>408考点提示：</strong> 传输层协议是历年考试重点，常考题型包括：选择题（协议特性对比）、综合题（TCP拥塞控制过程分析）、应用题（协议选择依据）。
+    </div>
+    
+    <table class="protocol-table">
+        <thead>
+            <tr>
+                <th width="20%">对比维度</th>
+                <th width="35%">UDP协议</th>
+                <th width="35%">TCP协议</th>
+                <th width="10%">408考点</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="dimension">连接性</td>
+                <td class="udp">无连接
+                    <span class="point">• 通信前无需建立连接</span>
+                    <span class="point">• 发送数据报后无状态记录</span>
+                </td>
+                <td class="tcp">有连接
+                    <span class="point">• 通信前需三次握手建立连接</span>
+                    <span class="point">• 通信结束需四次挥手释放连接</span>
+                </td>
+                <td>连接建立过程</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">可靠性</td>
+                <td class="udp">不可靠传输
+                    <span class="point">• 无确认机制</span>
+                    <span class="point">• 无重传机制</span>
+                    <span class="point">• 不保证数据顺序</span>
+                </td>
+                <td class="tcp">可靠传输
+                    <span class="point">• 确认应答机制（ACK）</span>
+                    <span class="point">• 超时重传机制</span>
+                    <span class="point">• 数据排序（序号/确认号）</span>
+                </td>
+                <td>可靠传输机制</td>
+            </tr>
+
+            <tr>
+                <td class="dimension">传输</td>
+                <td class="udp">支持一对一/多传输
+                    <span class="point">• 一对一（封装成单播IP数据报）</span>
+                    <span class="point">• 一对多传输（封装成广播/多播IP数据报）</span>
+                </td>
+                <td class="tcp">仅支持一对一传输
+                    <span class="point">• 因为通信双方的传输层必须先建立连接</span>
+                </td>
+                <td></td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">首部开销</td>
+                <td class="udp">8字节（固定）
+                    <span class="point">• 源端口(2B) | 目的端口(2B)</span>
+                    <span class="point">• 长度(2B) | 校验和(2B)</span>
+                </td>
+                <td class="tcp">20-60字节（可变）
+                    <span class="point">• 基础首部20字节</span>
+                    <span class="point">• 选项字段最多40字节</span>
+                    <span class="point">• 含序号、确认号、窗口等字段</span>
+                </td>
+                <td>首部格式</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">传输效率</td>
+                <td class="udp">高效
+                    <span class="point">• 无连接建立时延</span>
+                    <span class="point">• 无确认重传机制</span>
+                    <span class="point">• 首部开销小</span>
+                </td>
+                <td class="tcp">相对较低
+                    <span class="point">• 连接建立有额外开销</span>
+                    <span class="point">• 确认重传消耗资源</span>
+                    <span class="point">• 首部开销较大</span>
+                </td>
+                <td>适用场景</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">流量控制</td>
+                <td class="udp">无流量控制
+                    <span class="point">• 发送速率不受接收方限制</span>
+                    <span class="point">• 可能造成接收方缓冲区溢出</span>
+                </td>
+                <td class="tcp">滑动窗口机制
+                    <span class="point">• 接收方通过窗口字段控制发送速率</span>
+                    <span class="point">• 动态调整发送窗口大小</span>
+                </td>
+                <td>流量控制机制</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">拥塞控制</td>
+                <td class="udp">无拥塞控制
+                    <span class="point">• 不考虑网络状况</span>
+                    <span class="point">• 可能加剧网络拥塞</span>
+                </td>
+                <td class="tcp">(支持拥塞控制)四种算法结合
+                    <span class="point">• 慢开始（Slow Start）</span>
+                    <span class="point">• 拥塞避免（Congestion Avoidance）</span>
+                    <span class="point">• 快重传（Fast Retransmit）</span>
+                    <span class="point">• 快恢复（Fast Recovery）</span>
+                </td>
+                <td>拥塞控制算法</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">传输单元</td>
+                <td class="udp">数据报
+                    <span class="point">• 面向报文</span>
+                    <span class="point">• 保留应用层报文边界</span>
+                </td>
+                <td class="tcp">字节流
+                    <span class="point">• 面向字节流</span>
+                    <span class="point">• 不保留报文边界</span>
+                </td>
+                <td>数据传输特性</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">应用场景</td>
+                <td class="udp">实时应用
+                    <span class="point">• DNS域名解析</span>
+                    <span class="point">• 音视频流媒体（如VoIP）</span>
+                    <span class="point">• 广播/多播应用</span>
+                    <span class="point">• SNMP网络管理</span>
+                </td>
+                <td class="tcp">可靠性要求高的应用
+                    <span class="point">• HTTP/HTTPS网页浏览</span>
+                    <span class="point">• 文件传输（FTP）</span>
+                    <span class="point">• 电子邮件（SMTP/POP3）</span>
+                    <span class="point">• 远程登录（SSH/Telnet）</span>
+                </td>
+                <td>协议选择依据</td>
+            </tr>
+            
+            <tr>
+                <td class="dimension">408真题重点</td>
+                <td class="udp">• 首部字段含义<br>
+                    • 校验和计算<br>
+                    • 适用场景判断
+                </td>
+                <td class="tcp">• 三次握手/四次挥手过程<br>
+                    • 滑动窗口机制<br>
+                    • 拥塞控制算法分析<br>
+                    • 序号/确认号计算
+                </td>
+                <td>考试频率</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="key-points">
+        <h2>考研408核心考点详解</h2>
+        
+        <div class="point-card">
+            <h3>TCP三次握手与四次挥手（必考）</h3>
+            <p><span class="highlight">三次握手建立连接</span>：SYN → SYN+ACK → ACK</p>
+            <p><span class="highlight">四次挥手释放连接</span>：FIN → ACK → FIN → ACK</p>
+            <p>考点：状态转换、序列号变化、为什么需要三次握手/四次挥手</p>
+        </div>
+        
+        <div class="point-card">
+            <h3>TCP拥塞控制（综合题高频）</h3>
+            <p>四种算法的转换条件：</p>
+            <ul class="feature-list">
+                <li><span class="highlight">慢开始</span>：窗口指数增长（cwnd从1开始倍增）</li>
+                <li><span class="highlight">拥塞避免</span>：窗口线性增长（cwnd = cwnd + 1）</li>
+                <li><span class="highlight">快重传</span>：收到3个重复ACK立即重传</li>
+                <li><span class="highlight">快恢复</span>：ssthresh减半，cwnd = ssthresh + 3</li>
+            </ul>
+            <p>考点：拥塞窗口变化图、ssthresh阈值计算</p>
+        </div>
+        
+        <div class="point-card">
+            <h3>TCP滑动窗口（选择题重点）</h3>
+            <p>发送窗口 = min(接收窗口rwnd, 拥塞窗口cwnd)</p>
+            <p>考点：窗口大小计算、累计确认机制、零窗口探测</p>
+        </div>
+        
+        <div class="point-card">
+            <h3>UDP校验和计算（计算题）</h3>
+            <p>计算方法：</p>
+            <ol class="feature-list">
+                <li>伪首部+UDP首部+数据部分</li>
+                <li>按16位字求和</li>
+                <li>进位回滚</li>
+                <li>取反码作为校验和</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

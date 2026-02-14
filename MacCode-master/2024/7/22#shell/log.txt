@@ -1,0 +1,2 @@
+printf ,fd: 1
+fprints, fd: 1

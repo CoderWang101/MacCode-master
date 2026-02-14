@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络类别信息表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #1a2a6c;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #b21f1f;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #444;
+        }
+        
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+            animation: slideUp 1s ease-out;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        th {
+            background: linear-gradient(to bottom, #1a2a6c, #0d1b4d);
+            color: white;
+            font-size: 1.3rem;
+            padding: 18px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f5f8ff;
+        }
+        
+        tr:nth-child(odd) {
+            background-color: #e6eeff;
+        }
+        
+        tr:hover {
+            background-color: #d0deff;
+            transform: scale(1.005);
+            transition: background 0.3s, transform 0.2s;
+        }
+        
+        td {
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            border-bottom: 1px solid #d0d0e0;
+        }
+        
+        .network-class {
+            font-weight: bold;
+            color: #1a2a6c;
+            font-size: 1.4rem;
+        }
+        
+        .math {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.3rem;
+        }
+        
+        .ip-address {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #b21f1f;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin-top: auto;
+            width: 100%;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .subtitle { font-size: 1.2rem; }
+            th { font-size: 1.1rem; }
+            td { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>网络类别信息表</h1>
+            <div class="subtitle">计算机网络分类与寻址空间</div>
+            <p class="description">
+                此表格展示了A、B、C三类网络的关键特性，包括最大网络数、可用网络范围以及每个网络支持的最大主机数。
+                这些信息对于网络规划、子网划分和IP地址分配至关重要。
+            </p>
+        </header>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>网络类别</th>
+                        <th>最大可用网络数</th>
+                        <th>第一个可用的网络号</th>
+                        <th>最后一个可用的网络号</th>
+                        <th>每个网络中的最大主机数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="network-class">A类</td>
+                        <td class="math">2<sup>7</sup> - 2 = 126</td>
+                        <td class="ip-address">1</td>
+                        <td class="ip-address">126</td>
+                        <td class="math">2<sup>24</sup> - 2 = 16,777,214</td>
+                    </tr>
+                    <tr>
+                        <td class="network-class">B类</td>
+                        <td class="math">2<sup>14</sup> - 1 = 16,383</td>
+                        <td class="ip-address">128.1</td>
+                        <td class="ip-address">191.255</td>
+                        <td class="math">2<sup>16</sup> - 2 = 65,534</td>
+                    </tr>
+                    <tr>
+                        <td class="network-class">C类</td>
+                        <td class="math">2<sup>21</sup> - 1 = 2,097,151</td>
+                        <td class="ip-address">192.0.1</td>
+                        <td class="ip-address">223.255.255</td>
+                        <td class="math">2<sup>8</sup> - 2 = 254</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <footer>
+        <p>计算机网络基础 | IP地址分类 | 网络工程参考数据</p>
+    </footer>
+</body>
+</html>

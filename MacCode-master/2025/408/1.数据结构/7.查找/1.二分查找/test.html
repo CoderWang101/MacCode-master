@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown with MathJax</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        .formula {
+            color: #333; /* 深灰色，用于公式主体 */
+            font-family: Arial, sans-serif;
+        }
+        .variable {
+            color: #2196F3; /* 蓝色，用于变量 */
+        }
+        .operator {
+            color: #4CAF50; /* 绿色，用于运算符 */
+        }
+        .condition {
+            color: #FF9800; /* 橙色，用于条件 */
+        }
+        .comment {
+            color: #9C27B0; /* 紫色，用于注释 */
+        }
+    </style>
+</head>
+
+<body>
+    <p class="formula">
+        \( A^n[\textcolor{#2196F3}{i}][\textcolor{#2196F3}{j}] = \text{由顶点}\textcolor{#2196F3}{i}\text{到}\textcolor{#2196F3}{j}\text{的长度为}\textcolor{#2196F3}{n}\text{的路径数目} \)
+    </p>
+    
+    <p class="formula">
+        若 \( \textcolor{#FF9800}{A^{k-1}[i][j]} > \textcolor{#4CAF50}{A^{k-1}[i][k]} + \textcolor{#4CAF50}{A^{k-1}[k][j]} \)
+    </p>
+    
+    <p class="formula">
+        则 \( \textcolor{#FF9800}{A^{k}[i][j]} = \textcolor{#4CAF50}{A^{k-1}[i][k]} + \textcolor{#4CAF50}{A^{k-1}[k][j]} \)
+    </p>
+    
+    <p class="formula">
+        \( \textcolor{#9C27B0}{\text{path}^k[i][j]} = \textcolor{#2196F3}{k} \)
+    </p>
+    
+    <p class="formula">
+        否则 \( \textcolor{#FF9800}{A^k} \) 和 \( \textcolor{#9C27B0}{\text{path}(k)} \) 保持原值
+    </p>
+</body>
+
+</html>

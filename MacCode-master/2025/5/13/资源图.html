@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>资源分配图示例</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h2>资源分配图示例</h2>
+    <canvas id="resourceGraph" width="600" height="400"></canvas>
+    <div class="explanation">
+        <h3>图示说明</h3>
+        <ul>
+            <li><strong>进程节点</strong>：用方框表示，例如 P1 和 P2。</li>
+            <li><strong>资源节点</strong>：用圆圈表示，例如 R1 和 R2。</li>
+            <li><strong>分配边</strong>：用实线表示，从资源指向进程，表示资源已分配给进程。</li>
+            <li><strong>请求边</strong>：用虚线表示，从进程指向资源，表示进程请求资源。</li>
+            <li><strong>死锁</strong>：图中存在环（P1 → R2 → P2 → R1 → P1），表示系统处于死锁状态。</li>
+        </ul>
+    </div>
+
+    <script>
+        // 获取Canvas上下文
+        const canvas = document.getElementById('resourceGraph');
+        const ctx = canvas.getContext('2d');
+
+        // 定义节点和边的样式
+        const nodeSize = 30;
+        const fontSize = 14;
+        const allocationColor = '#0000ff'; // 分配边颜色
+        const requestColor = '#ff0000';   // 请求边颜色
+
+        // 定义节点的位置
+        const nodes = {
+            P1: { x: 150, y: 200 },
+            P2: { x: 450, y: 200 },
+            R1: { x: 100, y: 100 },
+            R2: { x: 500, y: 100 }
+        };
+
+        // 绘制节点
+        function drawNode(name, x, y, isProcess) {
+            ctx.beginPath();
+            if (isProcess) {
+                // 绘制方形节点
+                const halfSize = nodeSize / 2;
+                ctx.rect(x - halfSize, y - halfSize, nodeSize, nodeSize);
+            } else {
+                // 绘制圆形节点
+                ctx.arc(x, y, nodeSize, 0, Math.PI * 2);
+            }
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#000000';
+            ctx.fill();
+            ctx.stroke();
+
+            // 绘制节点名称
+            ctx.fillStyle = '#000000';
+            ctx.font = fontSize + 'px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(name, x, y + fontSize/2);
+        }
+
+        // 绘制分配边
+        function drawAllocationEdge(srcX, srcY, dstX, dstY) {
+            ctx.beginPath();
+            ctx.moveTo(srcX, srcY);
+            ctx.lineTo(dstX, dstY);
+            ctx.strokeStyle = allocationColor;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // 绘制请求边
+        function drawRequestEdge(srcX, srcY, dstX, dstY) {
+            ctx.beginPath();
+            ctx.moveTo(srcX, srcY);
+            ctx.lineTo(dstX, dstY);
+            ctx.strokeStyle = requestColor;
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        // 绘制所有节点
+        for (const [name, pos] of Object.entries(nodes)) {
+            const isProcess = name.startsWith('P');
+            drawNode(name, pos.x, pos.y, isProcess);
+        }
+
+        // 绘制分配边
+        // R1已分配给P1
+        drawAllocationEdge(nodes.R1.x, nodes.R1.y, nodes.P1.x, nodes.P1.y);
+        // R2已分配给P2
+        drawAllocationEdge(nodes.R2.x, nodes.R2.y, nodes.P2.x, nodes.P2.y);
+
+        // 绘制请求边
+        // P1请求R2
+        drawRequestEdge(nodes.P1.x, nodes.P1.y, nodes.R2.x, nodes.R2.y);
+        // P2请求R1
+        drawRequestEdge(nodes.P2.x, nodes.P2.y, nodes.R1.x, nodes.R1.y);
+    </script>
+</body>
+</html>

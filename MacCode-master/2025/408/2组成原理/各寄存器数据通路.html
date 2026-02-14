@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机寄存器数据通路图</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #608e6c, #7b717a);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px rgba(167, 176, 180, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: #e0f7fa;
+        }
+        
+        .highlight {
+            color: #ffd54f;
+            font-weight: bold;
+        }
+        
+        .specs {
+            background: rgba(91, 94, 97, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+        }
+        
+        .diagram-container {
+            flex: 1;
+            min-width: 800px;
+            background: rgba(121, 115, 116, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #4a5568;
+            min-height: 800px;
+        }
+        
+        .legend {
+            flex: 0 0 300px;
+            background: rgba(30, 30, 40, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #4a5568;
+            height: fit-content;
+        }
+        
+        .legend h2 {
+            color: #4fc3f7;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(50, 50, 70, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .legend-item:hover {
+            background: rgba(60, 60, 90, 0.7);
+            transform: translateY(-2px);
+        }
+        
+        .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .registers-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto;
+            gap: 20px;
+            width: 100%;
+            height: 700px;
+            position: relative;
+        }
+        
+        .cpu-section {
+            grid-column: 1;
+            grid-row: 1 / span 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .memory-section {
+            grid-column: 3;
+            grid-row: 1 / span 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .center-section {
+            grid-column: 2;
+            grid-row: 1 / span 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .register {
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            min-height: 120px;
+        }
+        
+        .register:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .register-title {
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #81d4fa;
+        }
+        
+        .register-bits {
+            font-size: 1.1rem;
+            color: #ffb74d;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .register-desc {
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+        
+        .cpu {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-color: #4a90e2;
+        }
+        
+        .acc {
+            background: linear-gradient(135deg, #1a512e, #2e7d32);
+            border-color: #66bb6a;
+        }
+        
+        .mq {
+            background: linear-gradient(135deg, #1a512e, #2e7d32);
+            border-color: #66bb6a;
+        }
+        
+        .alu {
+            background: linear-gradient(135deg, #5d4037, #8d6e63);
+            border-color: #d7ccc8;
+            height: 200px;
+        }
+        
+        .cu {
+            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+            border-color: #ba68c8;
+        }
+        
+        .ir {
+            background: linear-gradient(135deg, #b71c1c, #e53935);
+            border-color: #ef9a9a;
+        }
+        
+        .pc {
+            background: linear-gradient(135deg, #b71c1c, #e53935);
+            border-color: #ef9a9a;
+        }
+        
+        .memory {
+            background: linear-gradient(135deg, #e65100, #f57c00);
+            border-color: #ffb74d;
+        }
+        
+        .mdr {
+            background: linear-gradient(135deg, #01579b, #0288d1);
+            border-color: #4fc3f7;
+        }
+        
+        .mar {
+            background: linear-gradient(135deg, #01579b, #0288d1);
+            border-color: #4fc3f7;
+        }
+        
+        .path {
+            position: absolute;
+            z-index: 1;
+            stroke: #4fc3f7;
+            stroke-width: 3;
+            stroke-dasharray: 10;
+            fill: none;
+            animation: flow 2s linear infinite;
+            pointer-events: stroke;
+        }
+        
+        .path-control {
+            stroke: #ba68c8;
+        }
+        
+        @keyframes flow {
+            to {
+                stroke-dashoffset: -100;
+            }
+        }
+        
+        .path-label {
+            position: absolute;
+            background: rgba(79, 195, 247, 0.2);
+            color: #4fc3f7;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 3;
+            pointer-events: none;
+        }
+        
+        .path-label-control {
+            background: rgba(186, 104, 200, 0.2);
+            color: #ba68c8;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            color: #a0aec0;
+            font-size: 0.9rem;
+            max-width: 1000px;
+        }
+        
+        @media (max-width: 1100px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .diagram-container, .legend {
+                min-width: 90%;
+            }
+            
+            .registers-container {
+                height: 1000px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>计算机寄存器数据通路图</h1>
+        <div class="subtitle">
+            本图展示了计算机主要寄存器之间的数据通路关系，基于主存储器容量为
+            <span class="highlight">64K × 32位</span>，
+            指令字长、存储字长和机器字长均为
+            <span class="highlight">32位</span>的设计
+        </div>
+        
+        <div class="specs">
+            <p>寄存器位数说明：</p>
+            <p>• ACC、MQ、MDR、IR：32位 (机器字长)</p>
+            <p>• PC、MAR：16位 (64K = 2¹⁶地址空间)</p>
+            <p>• ALU：32位运算能力</p>
+            <p>• CU：控制单元，不直接处理数据</p>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="diagram-container">
+            <div class="registers-container">
+                <!-- 左侧CPU部分 -->
+                <div class="cpu-section">
+                    <div class="register cpu">
+                        <div class="register-title">CPU</div>
+                        <div class="register-desc">中央处理器</div>
+                    </div>
+                    
+                    <div class="register cu">
+                        <div class="register-title">CU</div>
+                        <div class="register-desc">控制单元</div>
+                    </div>
+                    
+                    <div class="register ir">
+                        <div class="register-title">IR</div>
+                        <div class="register-bits">32位</div>
+                        <div class="register-desc">指令寄存器</div>
+                    </div>
+                    
+                    <div class="register pc">
+                        <div class="register-title">PC</div>
+                        <div class="register-bits">16位</div>
+                        <div class="register-desc">程序计数器</div>
+                    </div>
+                </div>
+                
+                <!-- 中间部分 -->
+                <div class="center-section">
+                    <div class="register acc">
+                        <div class="register-title">ACC</div>
+                        <div class="register-bits">32位</div>
+                        <div class="register-desc">累加器</div>
+                    </div>
+                    
+                    <div class="register alu">
+                        <div class="register-title">ALU</div>
+                        <div class="register-bits">32位</div>
+                        <div class="register-desc">算术逻辑单元</div>
+                    </div>
+                    
+                    <div class="register mq">
+                        <div class="register-title">MQ</div>
+                        <div class="register-bits">32位</div>
+                        <div class="register-desc">乘商寄存器</div>
+                    </div>
+                </div>
+                
+                <!-- 右侧存储器部分 -->
+                <div class="memory-section">
+                    <div class="register memory">
+                        <div class="register-title">存储器体</div>
+                        <div class="register-desc">主存储器</div>
+                    </div>
+                    
+                    <div class="register mar">
+                        <div class="register-title">MAR</div>
+                        <div class="register-bits">16位</div>
+                        <div class="register-desc">存储器地址寄存器</div>
+                    </div>
+                    
+                    <div class="register mdr">
+                        <div class="register-title">MDR</div>
+                        <div class="register-bits">32位</div>
+                        <div class="register-desc">存储器数据寄存器</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 数据通路SVG -->
+            <svg width="100%" height="100%" viewBox="0 0 1000 800" style="position: absolute; top: 0; left: 0; z-index: 1;">
+                <!-- PC到MAR -->
+                <path class="path" d="M280,650 L280,600 L180,600 L180,500" id="pc-mar"></path>
+                <text class="path-label" x="180" y="620">指令地址</text>
+                
+                <!-- MAR到存储器 -->
+                <path class="path" d="M180,500 L180,450 L780,450 L780,200" id="mar-memory"></path>
+                <text class="path-label" x="480" y="400">地址</text>
+                
+                <!-- 存储器到MDR -->
+                <path class="path" d="M780,200 L780,500" id="memory-mdr"></path>
+                <text class="path-label" x="800" y="350">指令/数据</text>
+                
+                <!-- MDR到IR -->
+                <path class="path" d="M780,500 L780,550 L280,550 L280,500" id="mdr-ir"></path>
+                <text class="path-label" x="500" y="530">指令</text>
+                
+                <!-- IR到MAR -->
+                <path class="path" d="M280,500 L280,450 L180,450" id="ir-mar"></path>
+                <text class="path-label" x="180" y="470">操作数地址</text>
+                
+                <!-- MDR到ACC -->
+                <path class="path" d="M780,500 L600,500 L600,250" id="mdr-acc"></path>
+                <text class="path-label" x="650" y="380">操作数</text>
+                
+                <!-- ACC到MDR -->
+                <path class="path" d="M600,250 L600,350 L780,350" id="acc-mdr"></path>
+                <text class="path-label" x="650" y="300">运算结果</text>
+                
+                <!-- ACC到ALU -->
+                <path class="path" d="M600,250 L500,250" id="acc-alu"></path>
+                
+                <!-- MQ到ALU -->
+                <path class="path" d="M780,350 L780,250 L500,250" id="mq-alu"></path>
+                
+                <!-- ALU到ACC -->
+                <path class="path" d="M500,250 L600,250" id="alu-acc"></path>
+                
+                <!-- ALU到MQ -->
+                <path class="path" d="M500,250 L500,350 L780,350" id="alu-mq"></path>
+                
+                <!-- CU到所有组件 -->
+                <path class="path path-control" d="M280,350 Q180,400 280,450 T280,600" id="cu-control"></path>
+                <path class="path path-control" d="M280,350 Q180,300 280,250 T500,250" id="cu-control2"></path>
+                <path class="path path-control" d="M280,350 Q380,300 600,250" id="cu-control3"></path>
+                <path class="path path-control" d="M280,350 Q380,400 780,350" id="cu-control4"></path>
+                <text class="path-label path-label-control" x="280" y="300">控制信号</text>
+            </svg>
+        </div>
+        
+        <div class="legend">
+            <h2>数据通路说明</h2>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #4a90e2;"></div>
+                <div>
+                    <strong>CPU</strong> - 中央处理器
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #66bb6a;"></div>
+                <div>
+                    <strong>ACC (32位)</strong> - 累加器：存储运算结果
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #66bb6a;"></div>
+                <div>
+                    <strong>MQ (32位)</strong> - 乘商寄存器：乘法/除法运算
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #ba68c8;"></div>
+                <div>
+                    <strong>CU</strong> - 控制单元：指令译码与控制
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #d7ccc8;"></div>
+                <div>
+                    <strong>ALU (32位)</strong> - 算术逻辑单元：执行算术和逻辑运算
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #ffb74d;"></div>
+                <div>
+                    <strong>存储器体</strong> - 主存储器：存储指令和数据
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #ef9a9a;"></div>
+                <div>
+                    <strong>IR (32位)</strong> - 指令寄存器：存储当前指令
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #ef9a9a;"></div>
+                <div>
+                    <strong>PC (16位)</strong> - 程序计数器：存储下一条指令地址
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #4fc3f7;"></div>
+                <div>
+                    <strong>MAR (16位)</strong> - 存储器地址寄存器：存储要访问的内存地址
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #4fc3f7;"></div>
+                <div>
+                    <strong>MDR (32位)</strong> - 存储器数据寄存器：临时存储从内存读取或写入的数据
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #4fc3f7; width: 50px;"></div>
+                <div>
+                    <strong>蓝色箭头</strong> - 数据通路：表示寄存器之间的数据传输
+                </div>
+            </div>
+            
+            <div class="legend-item">
+                <div class="color-box" style="background: #ba68c8; width: 50px;"></div>
+                <div>
+                    <strong>紫色箭头</strong> - 控制信号：CU向各组件发送控制信号
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 25px; color: #81d4fa;">关键数据通路：</h3>
+            <ul style="padding-left: 20px; margin-top: 10px; line-height: 1.8;">
+                <li>PC → MAR：指令地址传输</li>
+                <li>MAR → 存储器：发送内存地址</li>
+                <li>存储器 → MDR：读取指令/数据</li>
+                <li>MDR → IR：指令加载</li>
+                <li>IR → MAR：操作数地址传输</li>
+                <li>MDR ↔ ACC：操作数加载/结果存储</li>
+                <li>ACC/MQ ↔ ALU：运算操作</li>
+                <li>CU → 所有组件：控制信号</li>
+            </ul>
+            
+            <h3 style="margin-top: 25px; color: #81d4fa;">工作流程：</h3>
+            <ol style="padding-left: 20px; margin-top: 10px; line-height: 1.8;">
+                <li>PC将指令地址送到MAR</li>
+                <li>MAR向存储器发送地址</li>
+                <li>存储器将指令送到MDR</li>
+                <li>MDR将指令送到IR</li>
+                <li>IR解析指令，将操作数地址送到MAR</li>
+                <li>重复2-3步获取操作数</li>
+                <li>操作数送到ACC/MQ进行运算</li>
+                <li>结果写回存储器</li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>注：本图展示了一个典型的冯·诺依曼架构计算机的数据通路。根据给定的64K×32位存储器规格，PC和MAR寄存器设计为16位以寻址64K地址空间，其他数据相关寄存器均为32位。</p>
+        <p>数据通路展示了指令周期（取指、执行）中寄存器之间的信息流动。</p>
+    </div>
+    
+    <script>
+        // 添加悬停效果
+        document.querySelectorAll('.path').forEach(path => {
+            path.addEventListener('mouseover', function() {
+                this.style.strokeWidth = '5';
+                if(this.classList.contains('path-control')) {
+                    this.style.stroke = '#ffa000';
+                } else {
+                    this.style.stroke = '#ffd54f';
+                }
+            });
+            
+            path.addEventListener('mouseout', function() {
+                this.style.strokeWidth = '3';
+                if(this.classList.contains('path-control')) {
+                    this.style.stroke = '#ba68c8';
+                } else {
+                    this.style.stroke = '#4fc3f7';
+                }
+            });
+        });
+        
+        // 添加寄存器悬停效果
+        document.querySelectorAll('.register').forEach(reg => {
+            reg.addEventListener('mouseover', function() {
+                const id = this.querySelector('.register-title').textContent.toLowerCase();
+                document.querySelectorAll(`path[id*="${id}"]`).forEach(path => {
+                    path.style.strokeWidth = '5';
+                    if(path.classList.contains('path-control')) {
+                        path.style.stroke = '#ffa000';
+                    } else {
+                        path.style.stroke = '#ffd54f';
+                    }
+                });
+            });
+            
+            reg.addEventListener('mouseout', function() {
+                const id = this.querySelector('.register-title').textContent.toLowerCase();
+                document.querySelectorAll(`path[id*="${id}"]`).forEach(path => {
+                    path.style.strokeWidth = '3';
+                    if(path.classList.contains('path-control')) {
+                        path.style.stroke = '#ba68c8';
+                    } else {
+                        path.style.stroke = '#4fc3f7';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

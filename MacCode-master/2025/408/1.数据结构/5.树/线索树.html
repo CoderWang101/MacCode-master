@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二叉树遍历序列特点归纳与图示</title>
+    <style>
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* 二叉树样式 */
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .node {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            margin: 10px;
+        }
+        .children {
+            display: flex;
+            justify-content: center;
+        }
+        .line {
+            width: 2px;
+            height: 20px;
+            background-color: #000;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>二叉树遍历序列特点归纳与图示</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>序列对比</th>
+                <th>特点</th>
+                <th>示例</th>
+                <th>二叉树图示</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 先序和中序相同 -->
+            <tr>
+                <td>先序和中序相同</td>
+                <td>二叉树为右斜树（所有节点只有右子树）</td>
+                <td>先序和中序均为 [A, B, C]</td>
+                <td>
+                    <div class="tree">
+                        <div class="node">A</div>
+                        <div class="line"></div>
+                        <div class="children">
+                            <div class="node">B</div>
+                            <div class="line"></div>
+                            <div class="children">
+                                <div class="node">C</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <!-- 先序和中序相反 -->
+            <tr>
+                <td>先序和中序相反</td>
+                <td>二叉树为左斜树（所有节点只有左子树）</td>
+                <td>先序为 [A, B, C]，中序为 [C, B, A]</td>
+                <td>
+                    <div class="tree">
+                        <div class="node">A</div>
+                        <div class="line"></div>
+                        <div class="children">
+                            <div class="node">B</div>
+                            <div class="line"></div>
+                            <div class="children">
+                                <div class="node">C</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <!-- 先序和后序相同 -->
+            <tr>
+                <td>先序和后序相同</td>
+                <td>二叉树为单节点树</td>
+                <td>先序和后序均为 [A]</td>
+                <td>
+                    <div class="tree">
+                        <div class="node">A</div>
+                    </div>
+                </td>
+            </tr>
+            <!-- 先序和后序相反 -->
+            <tr>
+                <td>先序和后序相反</td>
+                <td>二叉树结构具有对称性</td>
+                <td>先序为 [A, B, C]，后序为 [C, B, A]</td>
+                <td>
+                    <div class="tree">
+                        <div class="node">A</div>
+                        <div class="children">
+                            <div class="node">B</div>
+                            <div class="node">C</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <!-- 后序和中序相同 -->
+            <tr>
+                <td>后序和中序相同</td>
+                <td>二叉树为左斜树（所有节点只有左子树）</td>
+                <td>后序和中序均为 [C, B, A]</td>
+                <td>
+                    <div class="tree">
+                        <div class="node">A</div>
+                        <div class="line"></div>
+                        <div class="children">
+                            <div class="node">B</div>
+                            <div class="line"></div>
+                            <div class="children">
+                                <div class="node">C</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <!-- 后序和中序相反 -->
+            <tr>
+                <td>后序和中序相反</td>
+                <td>二叉树为右斜树（所有节点只有右子树）</td>
+                <td>后序为 [C, B, A]，中序为 [A, B, C]</td>
+                <td>
+                    <div class="tree">
+                        <div class="node">A</div>
+                        <div class="line"></div>
+                        <div class="children">
+                            <div class="node">B</div>
+                            <div class="line"></div>
+                            <div class="children">
+                                <div class="node">C</div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

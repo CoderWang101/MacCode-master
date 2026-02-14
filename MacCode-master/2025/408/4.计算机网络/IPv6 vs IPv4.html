@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPv4与IPv6对比 | 计算机考研408</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #1a2980;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #1a2980;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .ipv4 {
+            color: #d9534f;
+            font-weight: 500;
+        }
+        
+        .ipv6 {
+            color: #5bc0de;
+            font-weight: 500;
+        }
+        
+        .dimension {
+            font-weight: 600;
+            background-color: #e9ecef;
+        }
+        
+        .point {
+            margin-top: 5px;
+            display: block;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IPv4与IPv6协议对比表</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th width="20%">对比维度</th>
+                    <th width="30%">IPv4</th>
+                    <th width="30%">IPv6</th>
+                    <th width="20%">408考点指向</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="dimension">地址长度</td>
+                    <td class="ipv4">32位（4字节）</td>
+                    <td class="ipv6">128位（16字节）
+                        <span class="point">• 更大的地址空间</span>
+                    </td>
+                    <td>地址空间计算</td>
+                </tr>
+                <tr>
+                    <td class="dimension">地址表示法</td>
+                    <td class="ipv4">点分十进制（如192.168.1.1）</td>
+                    <td class="ipv6">冒号十六进制（如2001:0db8::1）
+                        <span class="point">• :: 省略连续0</span>
+                    </td>
+                    <td>地址压缩规则</td>
+                </tr>
+                <tr>
+                    <td class="dimension">地址类型</td>
+                    <td class="ipv4">单播、组播、广播</td>
+                    <td class="ipv6">单播、组播、任播
+                        <span class="point">• 无广播</span>
+                    </td>
+                    <td>任播应用场景</td>
+                </tr>
+                <tr>
+                    <td class="dimension">首部长度</td>
+                    <td class="ipv4">20~60字节（可变）
+                        <span class="point">• 4B的整数倍</span>
+                    </td>
+                    <td class="ipv6">固定40字节
+                        <span class="point">• 8B的整数倍</span>
+                    </td>
+                    <td>首部开销计算</td>
+                </tr>
+                <tr>
+                    <td class="dimension">首部字段</td>
+                    <td class="ipv4">13个字段：
+                        <span class="point">• IHL、TTL、校验和</span>
+                        <span class="point">• 总长度、服务类型</span>
+                    </td>
+                    <td class="ipv6">8个字段（简化结构）：
+                        <span class="point">• 移除校验和字段</span>
+                        <span class="point">• 协议字段→下一个首部</span>
+                        <span class="point">• 总长度→有效载荷长度</span>
+                        <span class="point">• 取消服务类型字段</span>
+                    </td>
+                    <td>字段功能对比</td>
+                </tr>
+                <tr>
+                    <td class="dimension">扩展首部</td>
+                    <td class="ipv4">选项字段在基本首部内</td>
+                    <td class="ipv6">可选字段移出首部
+                        <span class="point">• 路由器通常不检查扩展首部</span>
+                    </td>
+                    <td>灵活首部设计</td>
+                </tr>
+                <tr>
+                    <td class="dimension">分片机制</td>
+                    <td class="ipv4">发送方/路由器分片</td>
+                    <td class="ipv6">仅在源端分片
+                        <span class="point">• 路由器不分片</span>
+                        <span class="point">• ICMPv6新增"分组过大"报文</span>
+                    </td>
+                    <td>PMTU发现协议</td>
+                </tr>
+                <tr>
+                    <td class="dimension">安全性</td>
+                    <td class="ipv4">依赖IPSec（可选）</td>
+                    <td class="ipv6">内置IPSec（强制支持）</td>
+                    <td>安全扩展头机制</td>
+                </tr>
+                <tr>
+                    <td class="dimension">配置方式</td>
+                    <td class="ipv4">手动/DHCP配置</td>
+                    <td class="ipv6">SLAAC（无状态自动配置）
+                        <span class="point">• 支持即插即用</span>
+                        <span class="point">• 不需要DHCP协议</span>
+                    </td>
+                    <td>RS/RA报文</td>
+                </tr>
+                <tr>
+                    <td class="dimension">QoS支持</td>
+                    <td class="ipv4">服务类型（ToS）字段</td>
+                    <td class="ipv6">流标签（20位）
+                        <span class="point">• 支持资源预分配</span>
+                        <span class="point">• 保证带宽和时延</span>
+                    </td>
+                    <td>实时应用支持</td>
+                </tr>
+                <tr>
+                    <td class="dimension">过渡技术</td>
+                    <td class="ipv4">-</td>
+                    <td class="ipv6">双栈、隧道、NAT-PT</td>
+                    <td>隧道封装原理</td>
+                </tr>
+                <tr>
+                    <td class="dimension">路由效率</td>
+                    <td class="ipv4">路由器需处理选项字段</td>
+                    <td class="ipv6">简化首部提高效率
+                        <span class="point">• 路由器不处理扩展首部</span>
+                    </td>
+                    <td>转发性能优化</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

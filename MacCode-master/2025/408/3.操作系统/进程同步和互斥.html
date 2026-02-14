@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>进程同步与互斥方法对比</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h2>进程同步与互斥方法对比</h2>
+    <table>
+        <tr>
+            <th>方法名称</th>
+            <th>互斥性</th>
+            <th>避免饥饿</th>
+            <th>性能</th>
+            <th>可扩展性</th>
+            <th>复杂性</th>
+        </tr>
+        <tr>
+            <td>单标志法</td>
+            <td>一般（可能无法完全避免竞争）</td>
+            <td>可能引发“饿死”现象</td>
+            <td>较低（实现简单但可靠性低）</td>
+            <td>较差（难以扩展到多个进程）</td>
+            <td>简单</td>
+        </tr>
+        <tr>
+            <td>双标志法（先检查）</td>
+            <td>较好</td>
+            <td>减少“饿死”现象</td>
+            <td>中等</td>
+            <td>一般</td>
+            <td>复杂</td>
+        </tr>
+        <tr>
+            <td>双标志法（后检查）</td>
+            <td>较好</td>
+            <td>减少“饿死”现象</td>
+            <td>中等</td>
+            <td>一般</td>
+            <td>复杂</td>
+        </tr>
+        <tr>
+            <td>Peterson's Algorithm</td>
+            <td>良好（适用于两个进程）</td>
+            <td>减少“饿死”现象</td>
+            <td>高（适用于两个进程）</td>
+            <td>仅适用于两个进程</td>
+            <td>复杂</td>
+        </tr>
+        <tr>
+            <td>中断屏蔽方法</td>
+            <td>高（通过屏蔽中断确保互斥）</td>
+            <td>不会引发“饿死”现象</td>
+            <td>中等（可能影响系统实时性）</td>
+            <td>较好（适用于需要频繁进入临界区的系统）</td>
+            <td>简单</td>
+        </tr>
+        <tr>
+            <td>硬件指令法（TestAndSet）</td>
+            <td>高（原子指令确保互斥）</td>
+            <td>通常避免“饿死”现象</td>
+            <td>高（原子操作性能优异）</td>
+            <td>较好（依赖硬件支持）</td>
+            <td>复杂（依赖硬件指令）</td>
+        </tr>
+        <tr>
+            <td>硬件指令法（Swap）</td>
+            <td>高（原子指令确保互斥）</td>
+            <td>通常避免“饿死”现象</td>
+            <td>高（原子操作性能优异）</td>
+            <td>较好（依赖硬件支持）</td>
+            <td>复杂（依赖硬件指令）</td>
+        </tr>
+    </table>
+</body>
+</html>

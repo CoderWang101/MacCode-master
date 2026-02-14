@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>操作系统链接方式对比（408考点）</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; }
+        h2 { color: #2c3e50; text-align: center; }
+        table { border-collapse: collapse; width: 100%; margin: 20px auto; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        th { background-color: #3498db; color: white; padding: 15px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #ddd; }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:nth-child(odd) { background-color: #ffffff; }
+        .hard-link { color: #27ae60; font-weight: bold; }
+        .soft-link { color: #e74c3c; font-weight: bold; }
+        .highlight { background-color: #fffde7; }
+        .exam-point { background-color: #e3f2fd; font-weight: bold; }
+        .disadvantage { color: #f39c12; }
+        .important { font-weight: bold; color: #8e44ad; }
+    </style>
+</head>
+<body>
+    <h2>📚 硬链接 vs 软链接 - 操作系统核心对比（408考点）</h2>
+    
+    <table>
+        <tr>
+            <th width="20%">对比维度</th>
+            <th width="40%">硬链接（基于索引结点）</th>
+            <th width="40%">软链接（基于符号链）</th>
+        </tr>
+        <tr class="exam-point">
+            <td>📐 实现原理<br><span class="important">(文件系统结构)</span></td>
+            <td class="hard-link">多个目录项指向同一个索引结点（inode）</td>
+            <td class="soft-link">创建新的特殊文件，内容为目标路径字符串</td>
+        </tr>
+        <tr>
+            <td>💾 物理存储<br><span class="important">(存储方式)</span></td>
+            <td class="hard-link">共享同一份物理数据块，无额外存储开销</td>
+            <td class="soft-link">额外占用存储空间存放路径信息</td>
+        </tr>
+        <tr class="highlight">
+            <td>🔗 链接与源文件关系<br><span class="important">(关键考点)</span></td>
+            <td class="hard-link">平等关系，无主从之分</td>
+            <td class="soft-link">主从关系，依赖原文件</td>
+        </tr>
+        <tr>
+            <td>🔄 文件系统限制<br><span class="important">(跨文件系统)</span></td>
+            <td class="hard-link"><span class="disadvantage">不可跨文件系统</span>（inode仅限当前分区）</td>
+            <td class="soft-link"><span class="important">可跨文件系统</span>（仅存储路径字符串）</td>
+        </tr>
+        <tr class="highlight">
+            <td>🗂️ 目录链接<br><span class="important">(操作限制)</span></td>
+            <td class="hard-link"><span class="disadvantage">一般不支持目录链接</span><br>（防止环路风险）</td>
+            <td class="soft-link"><span class="important">支持目录链接</span><br>（常用快捷方式）</td>
+        </tr>
+        <tr class="exam-point">
+            <td>🗑️ 删除原文件<br><span class="important">(重要考点)</span></td>
+            <td class="hard-link">
+                不影响其他硬链接访问<br>
+                <span class="important">实际删除条件：链接计数=0</span>
+            </td>
+            <td class="soft-link">
+                <span class="disadvantage">立即失效</span>（成为悬空链接）<br>
+                访问时报错"文件不存在"
+            </td>
+        </tr>
+        <tr>
+            <td>📏 inode编号<br><span class="important">(inode分配)</span></td>
+            <td class="hard-link">与原文件相同（inode不变）</td>
+            <td class="soft-link">创建新的独立inode</td>
+        </tr>
+        <tr class="exam-point">
+            <td>🧩 文件操作特性<br><span class="important">(读写行为)</span></td>
+            <td class="hard-link">修改任一链接影响所有关联文件</td>
+            <td class="soft-link">操作自动重定向到目标文件</td>
+        </tr>
+        <tr>
+            <td>👁️ 可见性<br><span class="important">(ls -l显示)</span></td>
+            <td class="hard-link">显示原始文件属性</td>
+            <td class="soft-link">显示"l"类型及目标路径</td>
+        </tr>
+        <tr class="highlight">
+            <td>💡 典型应用场景</td>
+            <td class="hard-link">
+                1. 防止误删重要文件<br>
+                2. 文件版本管理<br>
+                3. 同分区共享资源
+            </td>
+            <td class="soft-link">
+                1. 跨分区文件访问<br>
+                2. 目录快捷方式<br>
+                3. 软件版本切换（如python→python3）
+            </td>
+        </tr>
+    </table>
+    
+    <div style="max-width: 800px; margin: 20px auto; padding: 15px; background: #e8f4f8; border-left: 4px solid #3498db;">
+        <h3>🔍 408重要考点总结：</h3>
+        <p>1. <b>硬链接的inode共享机制</b>：理解inode计数器的变化（ls -i查看）</p>
+        <p>2. <b>删除操作的底层原理</b>：区分unlink操作与实际数据删除的触发条件</p>
+        <p>3. <b>文件系统限制</b>：解释硬链接不可跨分区的原因（inode本地性）</p>
+        <p>4. <b>软链接的路径解析</b>：文件系统如何通过路径字符串进行重定向</p>
+    </div>
+</body>
+</html>

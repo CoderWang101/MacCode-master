@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>磁盘调度算法对比分析</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 2rem 0;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .intro {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+        .algorithm-section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #1a237e;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h3 {
+            color: #3949ab;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th {
+            background-color: #3949ab;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        tr:hover {
+            background-color: #e8eaf6;
+        }
+        .algo-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .algorithm {
+            flex: 1 1 300px;
+            background: #f9f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid #3949ab;
+        }
+        .algorithm h4 {
+            color: #1a237e;
+            margin-bottom: 10px;
+        }
+        .visualization {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+        .disk {
+            height: 300px;
+            margin: 2rem 0;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #3949ab;
+        }
+        .track {
+            position: absolute;
+            width: 90%;
+            height: 30px;
+            background: #e0e0e0;
+            left: 5%;
+            border-radius: 15px;
+        }
+        .head {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #d32f2f;
+            top: -5px;
+            border-radius: 3px;
+            transition: left 0.3s ease;
+        }
+        .seek-path {
+            position: absolute;
+            top: -15px;
+            height: 40px;
+            background: rgba(56,142,60,0.2);
+        }
+        .control-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        select, button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #3949ab;
+            color: white;
+            cursor: pointer;
+        }
+        button {
+            background: #1a237e;
+        }
+        select:hover, button:hover {
+            opacity: 0.9;
+        }
+        .example-request {
+            background: #d1c4e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #283593;
+            color: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) {
+            .algo-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>磁盘调度算法对比分析</h1>
+            <p class="subtitle">操作系统核心调度算法原理与性能比较</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <h2>磁盘调度算法概述</h2>
+            <p>磁盘调度算法是操作系统用于决定磁盘读写臂移动顺序的策略。当多个磁盘I/O请求需要处理时，调度算法的选择直接影响磁盘的访问效率和系统性能。</p>
+            <p>设计良好的磁盘调度算法需要权衡以下指标：</p>
+            <ul>
+                <li>平均寻道时间（Average Seek Time）</li>
+                <li>吞吐量（Throughput）</li>
+                <li>响应时间公平性（Fairness）</li>
+                <li>请求等待时间（Waiting Time）</li>
+            </ul>
+        </section>
+
+        <section class="algorithm-section">
+            <h2>磁盘调度算法对比</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>算法</th>
+                        <th>原理</th>
+                        <th>优点</th>
+                        <th>缺点</th>
+                        <th>适用场景</th>
+                        <th>平均寻道时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>FCFS</strong> (先来写服务)</td>
+                        <td>按请求到达顺序服务</td>
+                        <td>简单、公平</td>
+                        <td>效率低，寻道时间长</td>
+                        <td>请求少且分散的场景</td>
+                        <td>高</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SSTF</strong> (最短寻道时间优先)</td>
+                        <td>选择距离磁头最近的请求</td>
+                        <td>减少寻道时间，提高吞吐量</td>
+                        <td>可能导致饥饿现象</td>
+                        <td>中等负载系统</td>
+                        <td>低</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SCAN</strong> (电梯算法)</td>
+                        <td>磁头在磁盘表面来回扫描</td>
+                        <td>公平性好，兼顾效率</td>
+                        <td>响应时间不均衡</td>
+                        <td>多用户系统</td>
+                        <td>中等</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C-SCAN</strong> (电梯算法)</td>
+                        <td>单向扫描，返回时直接快速复位</td>
+                        <td>更平均的等待时间</td>
+                        <td>复位时寻道时间浪费</td>
+                        <td>负载均衡要求高</td>
+                        <td>中等偏高</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LOOK</strong> (优化版SCAN)</td>
+                        <td>只服务当前方向上的请求</td>
+                        <td>减少不必要的扫描</td>
+                        <td>实现相对复杂</td>
+                        <td>现代操作系统常用</td>
+                        <td>低</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C-LOOK</strong></td>
+                        <td>LOOK的单向版本</td>
+                        <td>最均衡的响应时间</td>
+                        <td>复位浪费问题</td>
+                        <td>高负载系统</td>
+                        <td>低</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="algorithm-section">
+            <h2>各算法详细说明</h2>
+            <div class="algo-container">
+                <div class="algorithm">
+                    <h4>FCFS 先来先服务</h4>
+                    <p>最简单的调度策略，按照I/O请求到达磁盘队列的顺序处理。这种算法最大的问题是移动路径可能不是最优的，导致磁盘臂来回移动，造成不必要的开销。</p>
+                </div>
+                <div class="algorithm">
+                    <h4>SSTF 最短寻道时间优先</h4>
+                    <p>选择距离当前磁头位置最近的磁道请求进行处理。显著减少了平均寻道时间，但可能导致某些位置的请求长时间得不到服务（饥饿）。</p>
+                </div>
+                <div class="algorithm">
+                    <h4>SCAN 电梯算法</h4>
+                    <p>磁盘臂从一端向另一端移动，途中服务所有请求。到达最后一个磁道后，调转方向继续服务。类似电梯的运行方式。</p>
+                </div>
+                <div class="algorithm">
+                    <h4>C-SCAN 循环扫描算法</h4>
+                    <p>改进SCAN算法，仅在一个方向（如从小到大）处理请求。当到达最后一个磁道后，立即快速移动到磁盘起始位置重新开始，而不是反方向服务。</p>
+                </div>
+                <div class="algorithm">
+                    <h4>LOOK 算法</h4>
+                    <p>SCAN的优化版本，磁盘臂只移动到请求的最末端位置，然后立即返回，而不是移动到磁盘物理边界。减少了不必要的磁道移动。</p>
+                </div>
+                <div class="algorithm">
+                    <h4>C-LOOK 算法</h4>
+                    <p>C-SCAN的优化版本，当磁盘臂沿一个方向移动时，仅处理该方向上的请求，到达最后一个请求位置后立即返回第一个请求位置。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="visualization">
+            <h2>算法寻道路径可视化</h2>
+            <p>磁道请求序列: [55, 58, 39, 18, 90, 160, 150, 38, 184]</p>
+            <p>当前磁头位置: 100</p>
+            
+            <div class="control-panel">
+                <select id="algorithmSelect">
+                    <option value="FCFS">FCFS 先来先服务</option>
+                    <option value="SSTF">SSTF 最短寻道时间优先</option>
+                    <option value="SCAN">SCAN 电梯算法</option>
+                    <option value="C_SCAN">C-SCAN 循环扫描</option>
+                    <option value="LOOK">LOOK 算法</option>
+                    <option value="C_LOOK">C-LOOK 算法</option>
+                </select>
+                <button id="visualizeBtn">可视化运行算法</button>
+            </div>
+            
+            <div class="disk" id="diskVis">
+                <!-- 可视化区域 -->
+            </div>
+            
+            <div class="example-request">
+                <h3>算法性能分析说明</h3>
+                <p>在相同的请求序列下（如上所示），不同算法的执行效果：</p>
+                <ul>
+                    <li>FCFS: 路径杂乱无章，寻道距离长</li>
+                    <li>SSTF: 路径紧凑，但可能忽略边缘请求</li>
+                    <li>SCAN: 有规律的往返路径</li>
+                    <li>C-SCAN: 单向服务到末端后快速返回起点</li>
+                </ul>
+                <p>在实际系统中，LOOK和C-LOOK算法往往是最佳平衡点，它们结合了SCAN系列算法的规律性和SSTF的效率，避免了扫描无用区域的弊端。</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>磁盘调度算法分析 | 操作系统核心概念 | 通过算法优化提高磁盘I/O效率</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('visualizeBtn').addEventListener('click', function() {
+            const diskVis = document.getElementById('diskVis');
+            diskVis.innerHTML = ''; // 清除之前的可视化
+            
+            // 添加磁盘轨道
+            for (let i = 0; i < 10; i++) {
+                const track = document.createElement('div');
+                track.className = 'track';
+                track.style.top = `${i * 30 + 10}px`;
+                diskVis.appendChild(track);
+            }
+            
+            // 添加磁头
+            const head = document.createElement('div');
+            head.className = 'head';
+            head.style.top = '100px';
+            head.style.left = '50%';
+            diskVis.appendChild(head);
+            
+            // 选择算法后显示路径（这里是伪代码）
+            setTimeout(() => {
+                const seekPath = document.createElement('div');
+                seekPath.className = 'seek-path';
+                seekPath.style.width = '80%';
+                seekPath.style.left = '10%';
+                diskVis.appendChild(seekPath);
+                
+                // 动画效果
+                let pos = 10;
+                const animate = setInterval(() => {
+                    head.style.left = `${pos}%`;
+                    pos += 2;
+                    if (pos >= 90) clearInterval(animate);
+                }, 100);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
