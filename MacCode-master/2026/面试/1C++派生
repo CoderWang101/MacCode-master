@@ -1,0 +1,100 @@
+#include <iostream>
+#include <string>
+
+// 基类 Animal
+class Animal
+{
+protected:
+    std::string name;
+
+public:
+    // 基类构造函数
+    Animal(const std::string &n) : name(n)
+    {
+        std::cout << "Animal constructor: " << name << std::endl;
+    }
+
+    // 虚析构函数（为了安全的多态）
+    virtual ~Animal()
+    {
+        std::cout << "Animal destructor: " << name << std::endl;
+    }
+
+    // 虚函数，派生类可以重写
+    virtual void speak() const
+    {
+        std::cout << name << " makes a sound." << std::endl;
+    }
+
+    // 非虚函数
+    void eat() const
+    {
+        std::cout << name << " is eating." << std::endl;
+    }
+};
+
+// 派生类 Dog，公有继承自 Animal
+class Dog : public Animal
+{
+public:
+    Dog(const std::string &n) : Animal(n)
+    {
+        std::cout << "Dog constructor: " << name << std::endl;
+    }
+
+    ~Dog() override
+    {
+        std::cout << "Dog destructor: " << name << std::endl;
+    }
+
+    // 重写 speak 函数
+    void speak() const override
+    {
+        std::cout << name << " barks." << std::endl;
+    }
+};
+
+// 派生类 Cat，公有继承自 Animal
+class Cat : public Animal
+{
+public:
+    Cat(const std::string &n) : Animal(n)
+    {
+        std::cout << "Cat constructor: " << name << std::endl;
+    }
+
+    ~Cat() override
+    {
+        std::cout << "Cat destructor: " << name << std::endl;
+    }
+
+    // 重写 speak 函数
+    void speak() const override
+    {
+        std::cout << name << " meows." << std::endl;
+    }
+};
+
+int main()
+{
+    // 使用基类指针指向派生类对象，演示多态
+    Animal *animals[2];
+    animals[0] = new Dog("Buddy");
+    animals[1] = new Cat("Kitty");
+
+    std::cout << "\n--- 多态调用 ---\n";
+    
+    for (int i = 0; i < 2; ++i)
+    {
+        animals[i]->speak(); // 调用派生类的版本
+        animals[i]->eat();   // 调用基类的版本（非虚函数）
+    }
+
+    std::cout << "\n--- 清理内存 ---\n";
+    for (int i = 0; i < 2; ++i)
+    {
+        delete animals[i]; // 通过基类指针删除，调用正确的析构顺序
+    }
+
+    return 0;
+}
