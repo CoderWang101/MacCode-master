@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <set>
+
+namespace compete_champion
+{
+    using namespace std;
+    // 不含计数
+    void slove1()
+    {
+        int n;
+        while (cin >> n)
+        {
+            set<string> all, loser;
+            for (int i = 0; i < n; ++i)
+            {
+                pair<string, string> vs;
+                cin >> vs.first >> vs.second;
+                all.insert(vs.first), all.insert(vs.second);
+                loser.insert(vs.second);
+            }
+            // 开始比赛
+            if (all.size() - loser.size() == 1)
+                cout << "Yes" << endl;
+            else
+                cout << "No" << endl;
+        }
+    }
+// 含计数，并输出冠军
+#include <map>
+    void slove2()
+    {
+        using namespace std;
+
+        int n;
+        while (cin >> n && n)
+        {
+            map<string, int> loseCount; // 记录每个人输的次数
+            set<string> allPlayers;     // 记录所有出现的选手
+
+            // 读入比赛结果
+            for (int i = 0; i < n; ++i)
+            {
+                string winner, loser;
+                cin >> winner >> loser;
+                allPlayers.insert(winner);
+                allPlayers.insert(loser);
+                loseCount[loser]++; // 负者输的次数加1
+            }
+
+            int championCandidates = 0;
+            string champion; // 用于存储冠军名字
+            // 统计从未输过的选手
+            for (const auto &player : allPlayers)
+            {
+                if (loseCount[player] == 0) // 从未输过
+                {
+                    championCandidates++;
+                    champion = player; // 记录冠军名字
+                }
+            }
+
+            // 输出结果
+            if (championCandidates == 1)
+            {
+                cout << "Yes" << endl;
+                cout << "Champion: " << champion << endl; // 输出冠军
+            }
+            else
+                cout << "No" << endl;
+        }
+    }
+
+    // int main()
+    // {
+    //     slove2();
+    //     return 0;
+    // }
+}

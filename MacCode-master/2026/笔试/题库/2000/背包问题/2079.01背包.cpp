@@ -64,9 +64,9 @@ namespace w
         memset(dp, 0, sizeof(dp));
         dp[0] = 0; // 体积为0时价值为0
 
-        for (int i = 1; i <= n; i++)
+        for (int i = 1; i <= n; i++)//遍历每个物品
             // 从右往左更新，避免覆盖
-            for (int j = V; j >= v[i]; j--)
+            for (int j = V; j >= v[i]; j--)//遍历每个体积
                 if (dp[j - v[i]] != -1)
                     dp[j] = max(dp[j], dp[j - v[i]] + w[i]);
         cout << dp[V] << endl;
@@ -76,8 +76,8 @@ namespace w
         for (int j = 1; j <= V; j++)
             dp[j] = -1;
 
-        for (int i = 1; i <= n; i++)
-            for (int j = V; j >= v[i]; j--)
+        for (int i = 1; i <= n; i++)//遍历每个物品
+            for (int j = V; j >= v[i]; j--)//遍历每个体积
                 if (dp[j - v[i]] != -1)
                     dp[j] = max(dp[j], dp[j - v[i]] + w[i]);
         cout << (dp[V] == -1 ? 0 : dp[V]) << endl;

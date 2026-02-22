@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f756050e-1526-4f84-aeba-0e5abbdf6834" name="更改" comment="" />
+    <list default="true" id="f756050e-1526-4f84-aeba-0e5abbdf6834" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../../../create_grad_intro_ppt.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -130,6 +132,7 @@
       <updated>1770951836734</updated>
       <workItem from="1770951837947" duration="5988000" />
       <workItem from="1771036688199" duration="3270000" />
+      <workItem from="1771657726186" duration="4000" />
     </task>
     <servers />
   </component>

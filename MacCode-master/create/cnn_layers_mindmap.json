@@ -1,0 +1,127 @@
+{
+  "path": "/Users/white/Desktop/Code/MacCode-master/create/CNN_Layers_MindMap.xmind",
+  "sheets": [
+    {
+      "title": "CNN 各层详解",
+      "rootTopic": {
+        "title": "卷积神经网络（CNN）结构总览",
+        "children": [
+          {
+            "title": "层次组成",
+            "children": [
+              { "title": "输入层" },
+              { "title": "卷积层" },
+              { "title": "激励层（激活）" },
+              { "title": "池化层（下采样）" },
+              { "title": "归一化层（BN）" },
+              { "title": "全连接层（FC）" },
+              { "title": "输出层" }
+            ]
+          },
+          {
+            "title": "输入层",
+            "children": [
+              { "title": "灰度图：形状 H×W×1" },
+              { "title": "彩色图：形状 H×W×3" },
+              { "title": "文本/序列：嵌入后矩阵" },
+              { "title": "常见预处理：归一化/标准化/裁剪/增强" }
+            ]
+          },
+          {
+            "title": "卷积层",
+            "children": [
+              { "title": "作用：用卷积核提取局部特征→特征图" },
+              { "title": "卷积核（过滤器）：权重矩阵，可训练" },
+              { "title": "步长（stride）：核移动步幅" },
+              { "title": "填充（padding）：边界扩充（常用0填充）" },
+              { "title": "膨胀（dilation）：扩张卷积提升感受野" },
+              { "title": "输出尺寸 H_out=(H+2P−K)/S+1" },
+              { "title": "深度/通道：多个核→多张特征图" },
+              { "title": "参数量 K×K×C_in×C_out + C_out（bias）" },
+              { "title": "计算量 ≈ H_out×W_out×C_out×(K×K×C_in)" },
+              { "title": "感受野：随层数增长，受K/stride/pooling影响" },
+              { "title": "典型设置：K∈{3,5,7}，S∈{1,2}，P匹配尺寸" }
+            ]
+          },
+          {
+            "title": "激励层（激活）",
+            "children": [
+              { "title": "目的：引入非线性，提升表达能力" },
+              { "title": "Sigmoid：概率输出但易梯度消失" },
+              { "title": "Tanh：零中心但仍可能饱和" },
+              { "title": "ReLU：高效，缓解梯度消失（正区间）" },
+              { "title": "Leaky/PReLU：缓解Dead ReLU" },
+              { "title": "常规搭配：Conv→Activation" }
+            ]
+          },
+          {
+            "title": "池化层（下采样）",
+            "children": [
+              { "title": "作用：降采样、稀疏特征、降计算/参数" },
+              { "title": "类型：Max Pooling / Avg Pooling" },
+              { "title": "常用窗口/步长：2×2，stride=2" },
+              { "title": "空间尺寸缩小→控制过拟合" },
+              { "title": "注意：信息丢失与位置敏感性" }
+            ]
+          },
+          {
+            "title": "归一化层（BatchNorm）",
+            "children": [
+              { "title": "作用：稳定分布，防梯度消失/爆炸" },
+              { "title": "训练/推理：均值方差的估计与使用" },
+              { "title": "位置：常置于卷积与激活之间/之后" }
+            ]
+          },
+          {
+            "title": "全连接层（FC）",
+            "children": [
+              { "title": "作用：综合特征，充当分类器" },
+              { "title": "连接：节点全连接，参数量大" },
+              { "title": "前置：Flatten 展平特征图" }
+            ]
+          },
+          {
+            "title": "输出层",
+            "children": [
+              { "title": "多分类：Softmax 输出概率分布" },
+              { "title": "二分类：Sigmoid 输出概率" },
+              { "title": "回归：线性/其他合适激活" }
+            ]
+          },
+          {
+            "title": "LeNet-5 示例",
+            "children": [
+              { "title": "输入层：32×32×1" },
+              { "title": "C1：5×5，深度6，stride=1，无填充→输出28×28×6" },
+              { "title": "参数：5×5×1×6 + 6 = 156；连接：28×28×6×(25+1)=122304" },
+              { "title": "S2：2×2，stride=2→输出14×14×6" },
+              { "title": "C3：5×5，深度16，stride=1→输出10×10×16" },
+              { "title": "参数：5×5×6×16 + 16 = 2416；连接：10×10×16×(25+1)=41600" },
+              { "title": "S4：2×2，stride=2→输出5×5×16" },
+              { "title": "C5：5×5，深度120→输出1×1×120（类似FC）" },
+              { "title": "F6：120→84 参数=120×84+84=10164" },
+              { "title": "Output：84→10 参数=84×10+10=850" }
+            ]
+          },
+          {
+            "title": "组合与流程",
+            "children": [
+              { "title": "常见：Conv→BN→Activation→Pooling→...→FC→Output" },
+              { "title": "尺寸控制：通过P/S选择稳定下采样节奏" },
+              { "title": "感受野规划：多层小核堆叠提升有效感受野" }
+            ]
+          },
+          {
+            "title": "关键公式",
+            "children": [
+              { "title": "输出尺寸：H_out=(H+2P−K)/S+1（同理W_out）" },
+              { "title": "参数量：Conv=K×K×C_in×C_out + C_out" },
+              { "title": "计算量：≈H_out×W_out×C_out×(K×K×C_in)" },
+              { "title": "感受野：逐层累加受K/stride/pooling影响" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

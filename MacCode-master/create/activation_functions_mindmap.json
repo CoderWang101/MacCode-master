@@ -1,0 +1,100 @@
+{
+  "path": "/Users/white/Desktop/Code/MacCode-master/create/Activation_Functions_MindMap.xmind",
+  "sheets": [
+    {
+      "title": "激活函数总览",
+      "rootTopic": {
+        "title": "激活函数（10种）",
+        "notes": {
+          "html": "<strong>作用</strong><br>为网络引入非线性，使深层网络能学习复杂模式；影响梯度传播、收敛速度与泛化。<br><strong>核心指标</strong><br>是否零中心、是否饱和、梯度行为、计算代价、输出范围。"
+        },
+        "children": [
+          {
+            "title": "一：简介",
+            "notes": {
+              "html": "<ul><li>激活函数将加权和映射到输出。</li><li>无激活时，多层线性等价于单层线性，表达能力受限。</li></ul>"
+            }
+          },
+          {
+            "title": "二：为何使用",
+            "notes": {
+              "html": "<ul><li>引入非线性，提升拟合能力。</li><li>缓解梯度消失与加速收敛（非饱和、线性段）。</li></ul>"
+            }
+          },
+          {
+            "title": "三：分类",
+            "notes": {
+              "html": "<ul><li><strong>饱和型</strong>：Sigmoid、Tanh（边界处梯度趋零）。</li><li><strong>非饱和型</strong>：ReLU、Leaky ReLU、ELU、PReLU、SELU、Swish、Mish。</li></ul>"
+            }
+          },
+          {
+            "title": "4.1 Sigmoid",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=1/(1+e^{-x})；导数 f'(x)=f(x)(1−f(x))<br><strong>性质</strong>：输出[0,1]，非零中心，饱和（|x|大时梯度趋零）。<br><strong>优点</strong>：概率输出、平滑、可导。<br><strong>缺点</strong>：梯度消失、非零中心、指数运算慢。<br><strong>场景</strong>：二分类输出层、置信度映射。"
+            }
+          },
+          {
+            "title": "4.2 Tanh",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=tanh(x)；与sigmoid关系：tanh(x)=2·sigmoid(2x)−1<br><strong>性质</strong>：输出[−1,1]，零中心，饱和。<br><strong>优点</strong>：零中心，较sigmoid更佳的梯度传播。<br><strong>缺点</strong>：仍有梯度饱和，指数运算。<br><strong>场景</strong>：RNN旧架构隐藏层、需要零中心时替代sigmoid。"
+            }
+          },
+          {
+            "title": "4.3 ReLU",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=max(0,x)<br><strong>性质</strong>：非饱和（x>0区间梯度常数），计算简单。<br><strong>优点</strong>：缓解梯度消失、收敛快、计算高效。<br><strong>缺点</strong>：Dead ReLU（x<0时梯度为0），非零中心。<br><strong>场景</strong>：CNN/MLP隐藏层默认首选，注意学习率与初始化避免死亡。"
+            }
+          },
+          {
+            "title": "4.4 Leaky ReLU",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=max(αx,x)，常α≈0.01<br><strong>性质</strong>：负半轴保留小梯度，缓解Dead ReLU。<br><strong>优点</strong>：训练更稳，保持非饱和与高效。<br><strong>缺点</strong>：α需调参，近似线性在复杂任务上可能欠表达。<br><strong>场景</strong>：ReLU死亡严重时替代。"
+            }
+          },
+          {
+            "title": "4.5 PReLU",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=max(ax,x)，a为可学习参数<br><strong>性质</strong>：自适应负半轴斜率，更灵活。<br><strong>优点</strong>：自动学习适合的泄露比例，潜在更优性能。<br><strong>缺点</strong>：参数增多、可能过拟合。<br><strong>场景</strong>：大规模CNN、需更强表达时。"
+            }
+          },
+          {
+            "title": "4.6 ELU",
+            "notes": {
+              "html": "<strong>定义</strong>：x≥0: x；x<0: α(e^{x}−1)<br><strong>性质</strong>：负半轴平滑到负值，输出均值更接近0。<br><strong>优点</strong>：促进零中心、加速收敛、减小激活方差。<br><strong>缺点</strong>：指数运算成本较高。<br><strong>场景</strong>：对稳定性与均值归零敏感的网络。"
+            }
+          },
+          {
+            "title": "4.7 SELU",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=λ·ELU(x;α)，常λ≈1.0507，α≈1.6733<br><strong>性质</strong>：实现自归一化（均值与方差趋稳），需匹配特定初始化与架构。<br><strong>优点</strong>：内部归一化，训练更快、更稳。<br><strong>缺点</strong>：对网络结构与初始化敏感。<br><strong>场景</strong>：SNN架构，自归一化神经网络。"
+            }
+          },
+          {
+            "title": "4.8 Swish",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=x·sigmoid(βx)，常β=1<br><strong>性质</strong>：平滑、非单调、在x≈0更平滑，负区间保持小幅度。<br><strong>优点</strong>：更强表达力，常优于ReLU；缓解训练早期饱和。<br><strong>缺点</strong>：含sigmoid，计算较ReLU慢。<br><strong>场景</strong>：现代CNN/Transformer激活的强选项。"
+            }
+          },
+          {
+            "title": "4.9 Mish",
+            "notes": {
+              "html": "<strong>定义</strong>：f(x)=x·tanh(softplus(x))，softplus(x)=ln(1+e^{x})<br><strong>性质</strong>：更平滑的非单调激活，负区间保留信息。<br><strong>优点</strong>：在部分视觉任务上优于Swish/ReLU。<br><strong>缺点</strong>：计算复杂度更高。<br><strong>场景</strong>：对精度敏感但可接受较高计算开销的任务。"
+            }
+          },
+          {
+            "title": "4.10 Softmax",
+            "notes": {
+              "html": "<strong>定义</strong>：f_i(z)=exp(z_i)/∑_j exp(z_j)<br><strong>性质</strong>：将向量映射为概率分布，输出和为1。<br><strong>优点</strong>：多分类输出的标准选择。<br><strong>缺点</strong>：易受logits尺度影响，需配合温度或归一化。<br><strong>场景</strong>：多分类输出层。"
+            }
+          },
+          {
+            "title": "选型建议",
+            "notes": {
+              "html": "<ul><li>隐藏层首选：ReLU/Leaky ReLU；追求精度：Swish/Mish。</li><li>需零中心与稳定：ELU/SELU。</li><li>输出层：二分类用Sigmoid，多分类用Softmax。</li><li>避免Dead ReLU：调小学习率或改用Leaky/PReLU。</li></ul>"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
