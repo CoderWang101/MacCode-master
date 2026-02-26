@@ -21,3 +21,12 @@ bin-release/
 *.zip
 .DS_Store
 
+MacCode-master/PYproject/pythonProject/prime/4.算法/data/FBlocation/train.csv
+
+# Build artifacts
+build/
+dist/
+pyinstaller_cache/
+*.spec
+__pycache__/
+*.pyc
