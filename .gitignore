@@ -30,3 +30,7 @@ pyinstaller_cache/
 *.spec
 __pycache__/
 *.pyc
+
+# Data and Documents
+*.csv
+*.pdf
