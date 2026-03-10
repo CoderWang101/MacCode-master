@@ -34,3 +34,9 @@ __pycache__/
 # Data and Documents
 *.csv
 *.pdf
+
+# Large data files
+*.npy
+imdb_test_*.txt
+.cache/
+imdb_train_*.txt
